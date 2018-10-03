@@ -1,4 +1,6 @@
 #include<stdio.h>
+#include <stdlib.h>
+#include<time.h>
 #include<string.h>
 /* Create a struct that has at least 2 data members, one must be a string. */
 /* You can provide struct prototypes outside of functions. */
@@ -15,27 +17,52 @@
 
 typedef unsigned long size_t;
 
-struct steam {int price; char* game;};
+struct steam {int price; char game[20];};
 
 void printgames(struct steam wishlist){
   printf("game: %s\n", wishlist.game);
   printf("price: %d\n", wishlist.price);
 }
+
+struct steam randO() {
+  struct steam gz;
+  int i = 0;
+  char string[20] = "";
+  int size = (rand() % 15)+3;
+  for(i;i< size; i++) {
+    char r = 'A' + (rand() % 26);
+    char * p = &r;
+    string[i] = r;
+  }
+  int j = 0;
+  for(j;j<size;j++) {
+    gz.game[j] = string[j];
+  }
+  gz.price = (rand()%10000);
+  return gz;
+}
+
 struct steam sales(struct steam g, int offprice){
   struct steam g0;
-  g0.game = g.game;
+  int j = 0;
+  for(j;j<20;j++) {
+    g0.game[j] = g.game[j];
+  }
+
   g0.price = g.price -  offprice;
   return g0;
 }
 	   
 int main() {
-  struct steam g1;
-  g1.price = 40;
-  g1.game = "fallout";
+  
+  srand(time(NULL));
+  struct steam g1 = randO();
+  
+  struct steam g2 = randO();
+  
   printgames(g1);
+  printgames(g2);
   g1 = sales(g1,10);
-  printgames(g1);
-  g1.price -= 10;
   printgames(g1);
   return 0;
 }
