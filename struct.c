@@ -2,67 +2,63 @@
 #include <stdlib.h>
 #include<time.h>
 #include<string.h>
-/* Create a struct that has at least 2 data members, one must be a string. */
-/* You can provide struct prototypes outside of functions. */
-/* Don't just combine random things, make it meaningful (like food and price, athlete and associated statistic, Pokemon and something about Pokemon ..) */
 
+struct steam {char game[20]; int price;};
 
-/* Write a function that returns an example of your struct when run. */
-/* This should not return the same struct every time. */
-/* Write a function that prints out variables of your structs type in a reasonable way. */
-/* Write a function that modifies values of your struct's type. */
-/* Write a main function that tests all these things. */
-/* Have meaningful output. */
-/* DONT FORGET A MAKEFILE */
-
-typedef unsigned long size_t;
-
-struct steam {int price; char game[20];};
-
-void printgames(struct steam wishlist){
-  printf("game: %s\n", wishlist.game);
-  printf("price: %d\n", wishlist.price);
+//prints out variables of struct steam type in a reasonable way
+void printgames(struct steam g) {
+  printf("game: %s\n", g.game);
+  printf("price: %d\n\n", g.price);
 }
 
+//returns an example of the struct when run
 struct steam randO() {
-  struct steam gz;
+  struct steam g;
   int i = 0;
-  char string[20] = "";
-  int size = (rand() % 15)+3;
-  for(i;i< size; i++) {
-    char r = 'A' + (rand() % 26);
-    char * p = &r;
-    string[i] = r;
-  }
-  int j = 0;
-  for(j;j<size;j++) {
-    gz.game[j] = string[j];
-  }
-  gz.price = (rand()%10000);
-  return gz;
+  for(i; i< ((rand() % 15)+1); i++)
+    g.game[i] = 'A' + (rand() % 26);
+  g.game[i] = '\0';
+  g.price = (rand()%100000);
+  return g;
 }
 
-struct steam sales(struct steam g, int offprice){
-  struct steam g0;
-  int j = 0;
-  for(j;j<20;j++) {
-    g0.game[j] = g.game[j];
-  }
-
-  g0.price = g.price -  offprice;
-  return g0;
+//modifies int price
+struct steam sales(struct steam g, int offprice) {
+  struct steam *p = &g;
+  p->price = g.price - offprice;
+  return g;
 }
-	   
+
+//modifies string game
+struct steam addWords(struct steam g, char *s) {
+  int l = strlen(g.game);
+  int i;
+  for (i = 0; (i + l) < 20 && s[i] != '\0'; i++)
+    *(g.game + l + i) = *(s + i);
+  *(g.game + l + i) = '\0';
+
+  return g;
+}
+
 int main() {
   
   srand(time(NULL));
   struct steam g1 = randO();
-  
   struct steam g2 = randO();
+  struct steam g3 = randO();
   
+  printf("random games \n");
   printgames(g1);
   printgames(g2);
-  g1 = sales(g1,10);
-  printgames(g1);
+  printgames(g3);
+  
+  printf("modifying int price (100 off) \n");
+  g3 = sales(g3,100);
+  printgames(g3);
+
+  printf("modifying string game (adding to name) \n");  
+  g3 = addWords(g3, ".beta");
+  printgames(g3);
+  
   return 0;
 }
