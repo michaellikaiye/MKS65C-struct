@@ -3,7 +3,7 @@
 #include<time.h>
 #include<string.h>
 
-struct steam {char game[20]; int price;};
+struct steam {char game[30]; int price;};
 
 //prints out variables of struct steam type in a reasonable way
 void printgames(struct steam g) {
@@ -12,40 +12,33 @@ void printgames(struct steam g) {
 }
 
 //returns an example of the struct when run
-struct steam randO() {
+struct steam randGame() {
+  char games[12][30] = {"Pong", "Pork", "Space Invaders", "Asteroids",
+			"Pac-Man", "Defender", "Donkey Kong", "Frogger",
+			"Galaga", "Joust", "Pitfall!", "Tetris"};
   struct steam g;
-  int i = 0;
-  for(i; i< ((rand() % 15)+1); i++)
-    g.game[i] = 'A' + (rand() % 26);
-  g.game[i] = '\0';
-  g.price = (rand()%100000);
+  int i = rand() % 12;
+  strcpy(g.game, games[i]);
+  g.price = rand() % 9999;
   return g;
 }
 
 //modifies int price
-struct steam sales(struct steam g, int offprice) {
-  struct steam *p = &g;
-  p->price = g.price - offprice;
-  return g;
+void *sales(struct steam *g, int offprice) {
+  g->price = g->price - offprice;
 }
 
 //modifies string game
-struct steam addWords(struct steam g, char *s) {
-  int l = strlen(g.game);
-  int i;
-  for (i = 0; (i + l) < 20 && s[i] != '\0'; i++)
-    *(g.game + l + i) = *(s + i);
-  *(g.game + l + i) = '\0';
-
-  return g;
+void *addWords(struct steam *g, char *s) {
+  strcat(g->game, s);
 }
 
 int main() {
   
   srand(time(NULL));
-  struct steam g1 = randO();
-  struct steam g2 = randO();
-  struct steam g3 = randO();
+  struct steam g1 = randGame();
+  struct steam g2 = randGame();
+  struct steam g3 = randGame();
   
   printf("random games \n");
   printgames(g1);
@@ -53,11 +46,11 @@ int main() {
   printgames(g3);
   
   printf("modifying int price (100 off) \n");
-  g3 = sales(g3,100);
+  sales(&g3,100);
   printgames(g3);
 
-  printf("modifying string game (adding to name) \n");  
-  g3 = addWords(g3, ".beta");
+  printf("modifying string game (adding to name) \n");
+  addWords(&g3, ".beta");
   printgames(g3);
   
   return 0;
